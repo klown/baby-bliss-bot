@@ -22,6 +22,7 @@ Returns: Prints an array of JSON objects to stdout, one for each line of the
          input '.wbs' file.
 """
 
+
 def make_shape_entries(shape_string):
     shapes = []
     # Individual shapes are separated by an ampersand.
@@ -36,6 +37,7 @@ def make_shape_entries(shape_string):
         shapes.append(shape_entry)
     return shapes
 
+
 def make_wbs_entry(wbs_parts_array):
     wbs_entry = {}
     wbs_entry['identifier'] = wbs_parts_array[0]
@@ -45,6 +47,7 @@ def make_wbs_entry(wbs_parts_array):
     wbs_entry['shapes'] = make_shape_entries(wbs_parts_array[4])
     return wbs_entry
 
+
 def read_parse_wbs_file(wbs_file):
     wbs_json_array = []
     for line in wbs_file:
@@ -52,6 +55,7 @@ def read_parse_wbs_file(wbs_file):
         line_dict = make_wbs_entry(line_parts)
         wbs_json_array.append(line_dict)
     return wbs_json_array
+
 
 def main():
     # Handle command line arguments
@@ -61,7 +65,7 @@ def main():
         sys.exit(1)
 
     # Handle file type, at least by its extension
-    if sys.argv[1].endswith('.wbs') == False:
+    if sys.argv[1].endswith('.wbs') is False:
         print(f'Input file ({sys.argv[1]}) must be a ".wbs" file')
         sys.exit(1)
 
@@ -70,5 +74,5 @@ def main():
     wbs_json_array = read_parse_wbs_file(wbs_file)
     pprint(wbs_json_array)
 
-main()
 
+main()
