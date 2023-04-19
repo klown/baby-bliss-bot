@@ -8,8 +8,18 @@ You may obtain a copy of the BSD 3-Clause License at
 https://github.com/inclusive-design/baby-bliss-bot/blob/main/LICENSE
 """
 
+import re
 import sys
 from pprint import pprint
+
+# Regular expression for finding shapes specifiers, e.g., 'W#5#2'
+SHAPE_TRIAD = re.compile('[A-Z]#[0-9]#[0-9]')
+
+# End of a shape and grid specification string
+CHAR_END_SEQ = '##0#4*'
+
+# End of entire shape string
+SHAPE_END_SEQ = '%£'
 
 """
 Read and parse a '.wbs' file
@@ -28,12 +38,17 @@ def make_shape_entries(shape_string):
     # Individual shapes are separated by an ampersand.
     shape_splits = shape_string.split('&')
     for asplit in shape_splits:
-        # The shape code and grid drawing instructions are separated by '#0'
-        # TODO: check this
-        shape_and_grid = asplit.split('#0')
         shape_entry = {}
-        shape_entry['code'] = shape_and_grid[0].replace('#', '-')
-        shape_entry['grid'] = shape_and_grid[1]
+        triad = SHAPE_TRIAD.search(asplit)
+        if triad:
+            shape_entry['code'] = triad.group().replace('#', '-')
+            shape_entry['grid'] = (
+                asplit[triad.end():]
+                .replace(CHAR_END_SEQ, '')
+                .replace(SHAPE_END_SEQ, '')
+                .replace('\n', '')
+                .replace('*', '')  # Some strings have just the asterisk
+            )
         shapes.append(shape_entry)
     return shapes
 
