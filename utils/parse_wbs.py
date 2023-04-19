@@ -8,9 +8,9 @@ You may obtain a copy of the BSD 3-Clause License at
 https://github.com/inclusive-design/baby-bliss-bot/blob/main/LICENSE
 """
 
+import json
 import re
 import sys
-from pprint import pprint
 
 # Regular expression for finding shapes specifiers, e.g., 'W#5#2'
 SHAPE_TRIAD = re.compile('[A-Z]#[0-9]#[0-9]')
@@ -87,7 +87,7 @@ def main():
     # Convert the file
     wbs_file = open(sys.argv[1], mode='r', encoding='latin-1')
     wbs_json_array = read_parse_wbs_file(wbs_file)
-    pprint(wbs_json_array)
+    print(json.dumps(wbs_json_array, indent=2, sort_keys=False))
 
 
 main()
