@@ -15,11 +15,15 @@ import sys
 # Regular expression for finding shapes specifiers, e.g., 'W#5#2'
 SHAPE_TRIAD = re.compile('[A-Z]#[0-9]#[0-9]')
 
-# End of a shape and grid specification string
-CHAR_END_SEQ = '##0#4*'
+# End of a shape and grid specification string (two versions)
+GRID_END_SEQ = '##0#4*'
+Z_GRID_END_SEQ = '##0#6*'
 
 # End of entire shape string
 SHAPE_END_SEQ = '%£'
+
+# Regular expression for grid coordinates and letters
+GRID_COORD_LETTERS = re.compile('#0#([0-9]+)#([0-9]+)#[0-9]+#[0-9]+#?(.?)')
 
 """
 Read and parse a '.wbs' file
@@ -33,6 +37,27 @@ Returns: Prints an array of JSON objects to stdout, one for each line of the
 """
 
 
+def make_grid_coordinates(grid_string):
+    grid_entry = {}
+    # Clear out all the endings
+    clear_string = (
+        grid_string.replace(GRID_END_SEQ, '')
+        .replace(Z_GRID_END_SEQ, '')
+        .replace('*', '')  # Some strings have just the asterisk at the end
+        .replace(SHAPE_END_SEQ, '')
+    )
+    match = GRID_COORD_LETTERS.match(clear_string)
+    if match:
+        grid_entry['x'] = match.group(1)
+        grid_entry['y'] = match.group(2)
+        grid_entry['letter'] = match.group(3)
+    else:
+        grid_entry['x'] = ''
+        grid_entry['y'] = ''
+        grid_entry['letter'] = ''
+    return grid_entry
+
+
 def make_shape_entries(shape_string):
     shapes = []
     # Individual shapes are separated by an ampersand.
@@ -42,13 +67,8 @@ def make_shape_entries(shape_string):
         triad = SHAPE_TRIAD.search(asplit)
         if triad:
             shape_entry['code'] = triad.group().replace('#', '-')
-            shape_entry['grid'] = (
-                asplit[triad.end():]
-                .replace(CHAR_END_SEQ, '')
-                .replace(SHAPE_END_SEQ, '')
-                .replace('\n', '')
-                .replace('*', '')  # Some strings have just the asterisk
-            )
+            grid_string = asplit[triad.end():]
+            shape_entry.update(make_grid_coordinates(grid_string))
         shapes.append(shape_entry)
     return shapes
 
@@ -66,6 +86,8 @@ def make_wbs_entry(wbs_parts_array):
 def read_parse_wbs_file(wbs_file):
     wbs_json_array = []
     for line in wbs_file:
+        if line.isspace():
+            continue
         line_parts = line.split('$')
         line_dict = make_wbs_entry(line_parts)
         wbs_json_array.append(line_dict)
