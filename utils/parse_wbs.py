@@ -13,7 +13,7 @@ import re
 import sys
 
 # Regular expression for finding shapes specifiers, e.g., 'W#5#2'
-SHAPE_TRIAD = re.compile('[A-Z]#[0-9]#[0-9]')
+SHAPE_TRIAD = re.compile('[A-Z]#[0-9]+#[0-9]+')
 
 # End of a shape and grid specification string (two versions)
 GRID_END_SEQ = '##0#4*'
@@ -23,6 +23,17 @@ Z_GRID_END_SEQ = '##0#6*'
 SHAPE_END_SEQ = '%£'
 
 # Regular expression for grid coordinates and letters
+# The structure is:
+# - #0              Ignore: Single hash followed by zero.
+# - #number         X coordinate: Hash followed by 1 or more digits, 0 thru 9.
+# - #number         X coordinate: Hash followed by 1 or more digits, 0 thru 9.
+# - #number#number  Ignore:  A pair of hash-followed-by-1-or-more-digits.
+# - #               Ignore:  Zero or one hashes.
+# - character       Optional letter: zero or one single character.
+# Examples, split up by spaces (no letter in the second example)
+# ignore    X   Y   ignore  ignore  letter
+# #0        #0  #10 #35#11  #       b
+# #0        #0  #8  #15#9
 GRID_COORD_LETTERS = re.compile('#0#([0-9]+)#([0-9]+)#[0-9]+#[0-9]+#?(.?)')
 
 """
