@@ -31,7 +31,7 @@ def search_title(item_title, collection):
     found.
 
     The `item_title` argument is a case insenstive string that can match all or
-    part of the title of an item in the collection.  For example 'newsletter' 
+    part of the title of an item in the collection.  For example 'newsletter'
     will match both 'Newsletter' and 'Blissword Newsletter'.
 
     The `collection` is a string naming the collection in which the item
