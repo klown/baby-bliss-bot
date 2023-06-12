@@ -63,7 +63,7 @@ def search_and_download(item_title, collection='blissymbolics'):
     same as the identifier.  Theitem's PDF and JP2 zip file are downloaded to
     that subdirectory.
 
-    Note that the downloader is smart enough not to download a file that was has
+    Note that the downloader is smart enough not to download a file that was
     downloaded on a previous run.  It appears to check if the files are the same
     and, if so, does not download it again.  It instead reports that it is
     skipping that file.
@@ -80,11 +80,11 @@ def search_and_download(item_title, collection='blissymbolics'):
 # - "Sexual" and "tell" 4/5
 # - "Communicating with" 3/5
 # - "Communicating together" 2/5
-search_and_download('newspaper')
-search_and_download('Sexual')
-search_and_download('tell')
-search_and_download('Communicating with')
-search_and_download('Communicating together')
+search_and_download('Symbol Users\' Newspaper')
+search_and_download('Being Sexual: An Illustrated Series on Sexuality and Relationships')
+search_and_download('After You Tell')
+search_and_download('Communicating with Blissymbolics')
+search_and_download('Communicating Together')
 
 # There are many items with "newsletter" in their title and this single search
 # retrieves all of them.  The ratings in parentheses are Will's ratings in terms
@@ -92,6 +92,6 @@ search_and_download('Communicating together')
 # - Newsletter (3.5/5)
 # - BlissWorld Newsletter (3/5)
 # - Symbol Coordination Committee Newsletter (2/5)
-search_and_download('newsletter')
+search_and_download('Newsletter')
 
 print('Done!')
