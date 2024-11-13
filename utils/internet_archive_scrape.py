@@ -71,7 +71,10 @@ def search_and_download(item_title, collection='blissymbolics'):
     for item in search_title(item_title, collection):
         print('Item: ' + str(item))
         ident = item['identifier']
-        download(ident, files=[f'{ident}.pdf', f'{ident}_jp2.zip'], verbose=True)
+        try:
+          download(ident, files=[f'{ident}.pdf', f'{ident}_jp2.zip'], verbose=True)
+        except Exception as e:
+          print(f'Error downloading {ident}: {e}')
 
 
 # Exact title matches -- retrieves only the items with the given title string.
